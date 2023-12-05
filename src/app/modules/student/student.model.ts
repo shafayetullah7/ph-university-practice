@@ -22,7 +22,16 @@ const studentSchema = new mongoose.Schema<Tstudent>(
     guardian: { type: guardianSchema, required: true },
     localGuardian: { type: guardianSchema, required: true },
     profileImage: { type: String, required: true },
-    academicDepartment: { type: String, required: true },
+    academicDepartment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AcademicDepartment",
+      required: true,
+    },
+    academicSemester: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AcademicSemester",
+      required: true,
+    },
   },
   { timestamps: true }
 );

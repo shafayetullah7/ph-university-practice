@@ -5,9 +5,11 @@ const academicDepartmentSchema = new mongoose.Schema<TacademicDepartment>({
   name: {
     type: String,
     required: true,
+    unique:true,
   },
   academicFaculty: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'AcademicFaculty',
     required: true,
   },
   isDeleted: {
@@ -17,4 +19,8 @@ const academicDepartmentSchema = new mongoose.Schema<TacademicDepartment>({
 });
 
 
-export const AcademicDepartment = mongoose.model<TacademicDepartment>('AcademicDepartment',academicDepartmentSchema);
+
+export const AcademicDepartment = mongoose.model<TacademicDepartment>(
+  "AcademicDepartment",
+  academicDepartmentSchema
+);

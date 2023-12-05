@@ -9,8 +9,10 @@ export const validateRequest = (schema: AnyZodObject) => {
     try {
       console.log("validating");
       await schema.parseAsync({ body: req.body });
+      console.log("validated");
       next();
     } catch (error) {
+      console.log("failed to validate via zod");
       next(error);
     }
   };

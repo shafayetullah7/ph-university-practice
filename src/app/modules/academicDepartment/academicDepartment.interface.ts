@@ -1,8 +1,7 @@
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 
 export type TacademicDepartment = {
-    name:string;
-    academicFaculty:Schema.Types.ObjectId;
-    isDeleted?:boolean;
-}
-
+  name: string;
+  academicFaculty: Types.ObjectId;
+  isDeleted?: boolean;
+};

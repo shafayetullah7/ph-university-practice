@@ -7,8 +7,9 @@ import { Tuser } from "./user.interfact";
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
 
+
   const userData: Tuser = {
-    id: "201-35-5511",
+    id: "2",
     role: "student",
     needsPasswordChange: true,
     password: password || config.defaultPassword,
