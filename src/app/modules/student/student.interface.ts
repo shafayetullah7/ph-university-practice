@@ -1,7 +1,4 @@
-export type Tusername = {
-  firstname: string;
-  lastname: string;
-};
+import { Types } from "mongoose";
 
 export type Tguardian = {
   name: string;
@@ -10,11 +7,19 @@ export type Tguardian = {
 };
 
 export type Tstudent = {
-  username: Tusername;
+  id: string;
+  user: Types.ObjectId;
+  name: string;
   gender: "male" | "female";
   dob: string;
   email: string;
   contact: string;
-  blood: "A+" | "A-" | "B+" | "B-" | "AB+" | "ab-" | "O+" | "O-";
+  emergencyContact: string;
+  presentAddress: string;
+  permanentAddress: string;
   guardian: Tguardian;
+  localGuardian: Tguardian;
+  profileImage: string;
+  academicDepartment: string;
+  isDeleted: boolean;
 };

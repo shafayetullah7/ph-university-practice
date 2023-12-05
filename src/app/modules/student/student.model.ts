@@ -1,67 +1,32 @@
-import mongoose from "mongoose";
-import { Tguardian, Tstudent, Tusername } from "./student.interface";
-
-const usernameSchema = new mongoose.Schema<Tusername>({
-  firstname: {
-    type: String,
-    required: true,
-  },
-  lastname: {
-    type: String,
-    required: true,
-  },
-});
+import mongoose, { Schema } from "mongoose";
+import { Tguardian, Tstudent } from "./student.interface";
 
 const guardianSchema = new mongoose.Schema<Tguardian>({
-  name: {
-    type: String,
-    required: true,
-  },
-  occupation: {
-    type: String,
-    required: true,
-  },
-  contact: {
-    type: String,
-    required: true,
-  },
+  name: { type: String, required: true },
+  occupation: { type: String, required: true },
+  contact: { type: String, required: true },
 });
 
-const studentSchema = new mongoose.Schema<Tstudent>({
-  username: {
-    type:usernameSchema,
-    required:[true,'Name must be provided']
+const studentSchema = new mongoose.Schema<Tstudent>(
+  {
+    id: { type: String, required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    name: { type: String, required: true },
+    gender: { type: String, enum: ["male", "female"], required: true },
+    dob: { type: String, required: true },
+    email: { type: String, required: true },
+    contact: { type: String, required: true },
+    emergencyContact: { type: String, required: true },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    guardian: { type: guardianSchema, required: true },
+    localGuardian: { type: guardianSchema, required: true },
+    profileImage: { type: String, required: true },
+    academicDepartment: { type: String, required: true },
   },
-  gender: {
-    type: String,
-    enum: {
-      values:["male", "female"],
-      message:'{VALUE} is not valid gender'
-    },
-    required: true,
-  },
-  dob: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  contact: {
-    type: String,
-    required: true,
-  },
-  blood: {
-    type: String,
-    enum: {
-      values:["A+", "A-", "B+", "B-", "AB+", "ab-", "O+", "O-"],
-      message:'{VALUE} is not valid'
-    },
-    required: true,
-  },
-  guardian:guardianSchema
-},{timestamps:true});
+  { timestamps: true }
+);
 
-const studentModel = mongoose.model<Tstudent>('Student',studentSchema);
-export default studentModel;
+const Student = mongoose.model("Student", studentSchema);
+
+export default Student;

@@ -1,7 +1,9 @@
+import { Tuser, UserModel } from "./user.interfact";
+import bcrypt from "bcrypt";
+import config from "../../config";
 import mongoose from "mongoose";
-import { Tuser } from "./user.interfact";
 
-const userSchema = new mongoose.Schema<Tuser>(
+const userSchema = new mongoose.Schema<Tuser,UserModel>(
   {
     id: {
       type: String,
@@ -23,6 +25,7 @@ const userSchema = new mongoose.Schema<Tuser>(
     status: {
       type: String,
       enum: ["in-progress", "blocked"],
+      default: "in-progress",
     },
     isDeleted: {
       type: Boolean,
@@ -32,7 +35,27 @@ const userSchema = new mongoose.Schema<Tuser>(
   { timestamps: true }
 );
 
+userSchema.static('userExists',async(id)=>{
+  try {
+    const user = await User.findOne({id});
+    return user?user:null;
+  } catch (error) {
+    throw new Error('Something went wrong');
+  }
+})
 
-const User = mongoose.model<Tuser>('User',userSchema);
+
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcryptSaltRounds)
+  );
+});
+
+userSchema.post("save", async function () {
+  this.password = "";
+});
+
+const User = mongoose.model<Tuser, UserModel>("User", userSchema);
 
 export default User;
