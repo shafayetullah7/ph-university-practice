@@ -3,6 +3,8 @@ import {
   TacademicFaculty,
   AcademicFacultyModel,
 } from "./academicFaculty.interface";
+import { AppError } from "../../errors/appError";
+import httpStatus from "http-status";
 
 const academicFacultySchema = new mongoose.Schema<
   TacademicFaculty,
@@ -24,13 +26,19 @@ academicFacultySchema.static("academicFacultyExists", async (name: string) => {
     const academicFaculty = await AcademicFaculty.findOne({ name });
     return academicFaculty ? academicFaculty : null;
   } catch (error) {
-    throw new Error("Something went wrong");
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Something went wrong"
+    );
   }
 });
 
 academicFacultySchema.pre("save", async function (next) {
   if (await AcademicFaculty.academicFacultyExists(this.name)) {
-    throw new Error(`${this.name} academic faculty already exists`);
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `${this.name} academic faculty already exists`
+    );
   } else {
     next();
   }
@@ -41,12 +49,18 @@ academicFacultySchema.pre("findOneAndUpdate", async function (next) {
     const { id } = this.getQuery();
     const academicFaculty = AcademicFaculty.findById(id);
     if (!academicFaculty) {
-      throw new Error("This academic faculty does not exist");
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "This academic faculty does not exist"
+      );
     } else {
       next();
     }
   } catch (error) {
-    throw new Error("Something went wrong");
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Something went wrong"
+    );
   }
 });
 

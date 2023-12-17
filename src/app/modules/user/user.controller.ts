@@ -7,7 +7,6 @@ import { Tuser } from "./user.interfact";
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
 
-
   const userData: Tuser = {
     id: "2",
     role: "student",

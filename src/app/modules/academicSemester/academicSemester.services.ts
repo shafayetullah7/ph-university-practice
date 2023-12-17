@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import { AppError } from "../../errors/appError";
 import {
   TacademicSemester,
   TsemesterCode,
@@ -13,11 +15,14 @@ const createAcademicSemesterInotDB = async (payload: TacademicSemester) => {
     semesters.set(name, semesterCodes[idx]);
   });
   if (semesters.get(name) !== code) {
-    throw new Error("Semester name do not match semester code");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Semester name do not match semester code"
+    );
   }
   const existingSemester = await AcademicSemester.findOne({ year, code });
   if (existingSemester) {
-    throw new Error("This semester already exists");
+    throw new AppError(httpStatus.BAD_REQUEST, "This semester already exists");
   }
   const newAcademicSemester = await AcademicSemester.create(payload);
   return newAcademicSemester;
