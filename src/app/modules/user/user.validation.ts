@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { studentValidation } from "../student/student.validation";
+import { facultyValidation } from "../faculty/faculty.validation";
 
 const userValidationSchema = z.object({
   password: z
@@ -17,7 +18,17 @@ const createStudentValidationSchema = z.object({
   }),
 });
 
+const createFacultyValidationSchema = z.object({
+  body: z.object({
+    password: z
+      .string({ invalid_type_error: "Password must be string" })
+      .optional(),
+    faculty: facultyValidation.FacultyValidationSchema,
+  }),
+});
+
 export const userValidation = {
   userValidationSchema,
   createStudentValidationSchema,
+  createFacultyValidationSchema,
 };

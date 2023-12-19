@@ -27,4 +27,6 @@ const generateId = async (semesterId: Types.ObjectId) => {
   return newId;
 };
 
+
+
 export default generateId;

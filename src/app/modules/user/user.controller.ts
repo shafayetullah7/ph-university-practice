@@ -8,7 +8,7 @@ const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
 
   const userData: Tuser = {
-    id: "2",
+    id: "",
     role: "student",
     needsPasswordChange: true,
     password: password || config.defaultPassword,
@@ -18,11 +18,29 @@ const createStudent = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    message: "User created successfully",
+    message: "Student user created successfully",
+    data,
+  });
+});
+
+const createFaculty = catchAsync(async (req, res) => {
+  const { password, faculty: facultyData } = req.body;
+
+  const userData: Tuser = {
+    id: "",
+    role: "faculty",
+    needsPasswordChange: true,
+    password: password || config.defaultPassword,
+  };
+  const data = await userServices.createFacultyIntoDB(userData, facultyData);
+  return res.status(200).json({
+    success: true,
+    message: "Faculty user created successfully",
     data,
   });
 });
 
 export const userController = {
   createStudent,
+  createFaculty,
 };

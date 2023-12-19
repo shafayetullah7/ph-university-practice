@@ -24,33 +24,26 @@ class QueryBuilder<T> {
   }
 
   filter() {
-    const exclude = ["searchTerm", "sort"];
+    const exclude = ["searchTerm", "sort", "page", "limit", "sort"];
     const queryObj = { ...this?.query };
     exclude.forEach((el) => delete queryObj[el]);
 
-    this.queryModel = this.queryModel
-      .find(queryObj as FilterQuery<T>)
-      .populate({
-        path: "academicSemester",
-        select: "-__v",
-      })
-      .populate({
-        path: "academicDepartment",
-        select: "-__v",
-        populate: { path: "academicFaculty", select: "-__v" },
-      });
+    this.queryModel = this.queryModel.find(queryObj as FilterQuery<T>);
     return this;
   }
 
   sort() {
     const sort = this?.query.sort || "-createdAt";
-    this.queryModel = this?.queryModel.sort(sort as string);
+    this.queryModel = this?.queryModel.sort(
+      (sort as string)?.split(",").join(" ")
+    );
     return this;
   }
 
   paginate() {
     const page = Number(this?.query?.page) || 1;
     const limit = Number(this?.query?.limit) || 10;
+    console.log(limit, page);
     const skip = (page - 1) * limit;
     this.queryModel = this?.queryModel.skip(skip).limit(limit);
     return this;

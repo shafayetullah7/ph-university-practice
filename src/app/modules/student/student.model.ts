@@ -10,7 +10,7 @@ const guardianSchema = new mongoose.Schema<Tguardian>({
 const studentSchema = new mongoose.Schema<Tstudent>(
   {
     id: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, ref: "User" },
+    user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     name: { type: String, required: true },
     gender: { type: String, enum: ["male", "female"], required: true },
     dob: { type: String, required: true },
