@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import handleZodError from "./zod.error.handler";
 import { handleMongooseValidationError } from "./mongoose.error";
 import { handleCastError } from "./cast.error.handler";
+import { AppError } from "../errors/appError";
 
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
@@ -13,14 +14,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next
 ) => {
-  // let statusCode = err.statusCode || 500;
-  // let message = err.message || "Something went wrong";
-  // let errorSources: TerrorSource[] = [
-  //   {
-  //     path: "Default path",
-  //     message: "Default message",
-  //   },
-  // ];
   console.log(err.message);
   let error: Terror = {
     success: false,
@@ -31,6 +24,8 @@ export const globalErrorHandler: ErrorRequestHandler = (
   };
   if (err instanceof ZodError) {
     error = handleZodError(err);
+  } else if (err instanceof AppError) {
+    error.statusCode = err.statusCode;
   } else if (err.name === "ValidationError") {
     error = handleMongooseValidationError(err);
   }

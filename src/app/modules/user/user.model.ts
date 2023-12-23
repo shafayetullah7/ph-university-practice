@@ -14,10 +14,14 @@ const userSchema = new mongoose.Schema<Tuser, UserModel>(
     password: {
       type: String,
       required: true,
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
       default: true,
+    },
+    passwordChangedAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -48,6 +52,11 @@ userSchema.static("userExists", async (id) => {
     );
   }
 });
+
+userSchema.statics.passwordMatched = async (password, hashedPassword) => {
+  const match = await bcrypt.compare(password, hashedPassword);
+  return match;
+};
 
 userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(
